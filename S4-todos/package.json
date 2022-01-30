@@ -1,0 +1,19 @@
+{
+  "name": "todos-backend",
+  "version": "1.0.0",
+  "description": "This is a todos apis",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Tajammul Pasha",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
