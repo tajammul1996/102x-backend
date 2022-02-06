@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cors from 'cors';
 
 // import {todos} from "./todos";
 const todos = [
@@ -90,6 +91,7 @@ function logger(req, res, next) {
 
 app.use(logger);
 app.use(bodyParser.json());
+app.use(cors());
 
 function responseBuilder(success, error, data) {
     return {
@@ -106,13 +108,14 @@ app.get("/api/todos", (req, res) => {
 const search = req.query.search
 const page = parseInt(req.query.page) || 1
 // const completed = req.query.completed
-// if(search){
-//     let filteredTodos = todos.filter(todo => todo.text.toLowerCase().includes(search.toLowerCase()));
-//     return res.status(200).json(responseBuilder(true, null, {todos: filteredTodos}));
-// }
+if(search){
+    let filteredTodos = todos.filter(todo => todo.text.toLowerCase().includes(search.toLowerCase()));
+    return res.status(200).json(responseBuilder(true, null, {todos: filteredTodos}));
+}
 const limit = 5
 
-  return res.status(200).json(responseBuilder(true, null, { todos: todos.slice((page*limit)-limit, page * limit) }));
+  // return res.status(200).json(responseBuilder(true, null, { todos: todos.slice((page*limit)-limit, page * limit) }));
+  return res.status(200).json(responseBuilder(true, null, { todos}));
 });
 
 app.get("/api/todos/:id", (req, res) => {
