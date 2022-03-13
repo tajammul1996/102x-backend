@@ -1,9 +1,9 @@
 /*  
  * bulkCreate (with raw: true)
  * where clause in sequelize
- * attributes
+ * attributes, (exclude)
  * find methods - findAll, findOne, findByPk, findOrCreate
- * operators
+ * operators - or, and, gt, gte, lt, lte, like, substring, in, notin
  */
 
 import { Sequelize, DataTypes, Op } from "sequelize";
