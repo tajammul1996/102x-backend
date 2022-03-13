@@ -27,6 +27,14 @@ const User = sequelize.define('user', {
       len: [6, 20]
     }
   },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true
+    }
+  },
   age: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -39,7 +47,11 @@ const User = sequelize.define('user', {
   timestamps: false,
 });
 
-
+User.create({ username: "janedoe", email: "abc@gmail.com", age: 20}, {raw: true})
+  .then(user => console.log(user))
+  .catch(e => {
+    console.log(e)
+  })
 // User.bulkCreate([
 //   {username: "Johndoe", age: 30},
 //   {username: "Janedoe", age: 21},
@@ -56,9 +68,9 @@ const User = sequelize.define('user', {
 //   .then(result => console.log(result))
 //   .catch(e => console.log(e))
 
-User.findAll({raw: true, attributes: { exclude: ['address']}, where: {user_id: 1} })
-  .then(result => console.log(result))
-  .catch(e => console.log(e))
+// User.findAll({raw: true, attributes: { exclude: ['address']}, where: {user_id: 1} })
+//   .then(result => console.log(result))
+//   .catch(e => console.log(e))
 
 // User.findOne({where: { age: 21 }, raw: true })
 //   .then(result => console.log(result))
@@ -90,6 +102,8 @@ User.findAll({raw: true, attributes: { exclude: ['address']}, where: {user_id: 1
 // })
 //   .then((result) => console.log(result))
 //   .catch((e) => console.log(e));
+
+
 
 
 sequelize.sync({  });
