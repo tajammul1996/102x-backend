@@ -2,8 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from 'cors';
 
-import { Op } from "sequelize";
-import sequelize from "./db-connection.js";
+import { connect } from "./db-connection.js";
 import Todo from "./models/todo.model.js";
 
 
@@ -38,40 +37,47 @@ app.get("/", (req, res, next) => {
 
 
 app.get("/api/todos", (req, res) => {
-  // console.log(req.)
-  if(req.query.search){
-   return Todo.findAll({
-     where: {
-       [Op.or]: {
-         title: {
-           [Op.substring]: req.query.search,
-         },
-         description: {
-           [Op.substring]: req.query.search,
-         },
-       },
-     },
-   })
-     .then((todos) => {
-       return res.status(200).json(responseBuilder(true, null, { todos }));
-     })
-     .catch((e) => {
-       console.log(e);
-       return res
-         .status(500)
-         .json(responseBuilder(false, "Something went wrong", null));
-     });
-  }
+  return Todo.find()
+    .then(todos => res.status(200).json(responseBuilder(true, null, { todos })))
+    .catch(err => console.log(err))
+})
 
-  Todo.findAll()
-    .then((todos) => {
-      return res.status(200).json(responseBuilder(true, null, { todos }));
-    })
-    .catch((e) => {
-      console.log(e);
-      return res.status(500).json(responseBuilder(false, "Something went wrong", null));
-    });
-});
+
+// app.get("/api/todos", (req, res) => {
+//   // console.log(req.)
+//   if(req.query.search){
+//    return Todo.findAll({
+//      where: {
+//        [Op.or]: {
+//          title: {
+//            [Op.substring]: req.query.search,
+//          },
+//          description: {
+//            [Op.substring]: req.query.search,
+//          },
+//        },
+//      },
+//    })
+//      .then((todos) => {
+//        return res.status(200).json(responseBuilder(true, null, { todos }));
+//      })
+//      .catch((e) => {
+//        console.log(e);
+//        return res
+//          .status(500)
+//          .json(responseBuilder(false, "Something went wrong", null));
+//      });
+//   }
+
+//   Todo.findAll()
+//     .then((todos) => {
+//       return res.status(200).json(responseBuilder(true, null, { todos }));
+//     })
+//     .catch((e) => {
+//       console.log(e);
+//       return res.status(500).json(responseBuilder(false, "Something went wrong", null));
+//     });
+// });
 
 app.post("/api/todos", (req, res) => {
   const title = req.body.title;
@@ -96,84 +102,84 @@ app.post("/api/todos", (req, res) => {
   // console.log(req.body);
 });
 
-app.get("/api/todos/:id", (req, res) => {
-  const id = req.params.id;
+// app.get("/api/todos/:id", (req, res) => {
+//   const id = req.params.id;
 
-  Todo.findByPk(id)
-    .then((todo) => {
-      if (todo) {
-        return res.status(200).json(responseBuilder(true, null, { todo }));
-      }
-      return res
-        .status(400)
-        .json(
-          responseBuilder(true, "Requested todo with the id is not found", {
-            todo: null,
-          })
-        );
-    })
-    .catch((e) =>
-      res.status(500).json(responseBuilder(false, "Something went wrong", null))
-    );
-});
+//   Todo.findByPk(id)
+//     .then((todo) => {
+//       if (todo) {
+//         return res.status(200).json(responseBuilder(true, null, { todo }));
+//       }
+//       return res
+//         .status(400)
+//         .json(
+//           responseBuilder(true, "Requested todo with the id is not found", {
+//             todo: null,
+//           })
+//         );
+//     })
+//     .catch((e) =>
+//       res.status(500).json(responseBuilder(false, "Something went wrong", null))
+//     );
+// });
 
-app.delete("/api/todos/:id", (req, res) => {
-  const id = req.params.id;
+// app.delete("/api/todos/:id", (req, res) => {
+//   const id = req.params.id;
 
-  Todo.destroy({
-    where: {
-      id: id,
-    },
-  })
-    .then((deletedTodo) => {
-      console.log(deletedTodo);
-      if(deletedTodo){
+//   Todo.destroy({
+//     where: {
+//       id: id,
+//     },
+//   })
+//     .then((deletedTodo) => {
+//       console.log(deletedTodo);
+//       if(deletedTodo){
 
-        return res.status(200).json(responseBuilder(true, null, { }));
-      }
-      return res
-        .status(400)
-        .json(responseBuilder(false, "Todo with the id not found", {  }));
-    })
-    .catch((e) =>
-      res.status(500).json(responseBuilder(false, "Something went wrong", null))
-    );
-});
+//         return res.status(200).json(responseBuilder(true, null, { }));
+//       }
+//       return res
+//         .status(400)
+//         .json(responseBuilder(false, "Todo with the id not found", {  }));
+//     })
+//     .catch((e) =>
+//       res.status(500).json(responseBuilder(false, "Something went wrong", null))
+//     );
+// });
 
-app.patch("/api/todos/:id", (req, res) => {
-    const id = req.params.id;
+// app.patch("/api/todos/:id", (req, res) => {
+//     const id = req.params.id;
 
-    const data = req.body;
+//     const data = req.body;
 
-    Todo.update(data, {
-      where: {
-        id: id,
-      },
-    })
-      .then((todo) => {
-        console.log(todo[0])
-        if (todo[0]) {
-          return res.status(200).json(responseBuilder(true, null, {}));
-        }
-          return res.status(400).json(responseBuilder(false, "Id not found", {}));
+//     Todo.update(data, {
+//       where: {
+//         id: id,
+//       },
+//     })
+//       .then((todo) => {
+//         console.log(todo[0])
+//         if (todo[0]) {
+//           return res.status(200).json(responseBuilder(true, null, {}));
+//         }
+//           return res.status(400).json(responseBuilder(false, "Id not found", {}));
 
-      })
-      .catch((e) =>
-        res
-          .status(500)
-          .json(responseBuilder(false, "Something went wrong", null))
-      );
-});
+//       })
+//       .catch((e) =>
+//         res
+//           .status(500)
+//           .json(responseBuilder(false, "Something went wrong", null))
+//       );
+// });
 
 const startServer = () => {
-  sequelize.sync();
-  sequelize
-    .authenticate()
-    .then(() => {
-      console.log("Database connected!");
-      app.listen(4000, () => console.log("Port 4000 is listening"));
+
+
+  return connect()
+    .then(res => {
+      console.log("Connected to db!");
+      app.listen(4000, () => console.log("Server started"))
     })
-    .catch((e) => console.log(e));
+    .catch(err => console.log("Connection Failed"))
 };
 
 startServer();

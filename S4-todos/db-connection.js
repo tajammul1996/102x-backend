@@ -1,9 +1,4 @@
-import { Sequelize } from 'sequelize';
+import mongoose from "mongoose";
 
-const sequelize = new Sequelize('access', 'root', 'root', {
-  host: 'localhost',
-  dialect: 'mysql',
-  port: 3307
-})
-
-export default sequelize;
+export const connect = () => 
+  mongoose.connect('mongodb://localhost:27017/todos')
